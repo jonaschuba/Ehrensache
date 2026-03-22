@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react'
-import { motion, useMotionValue, useTransform } from 'framer-motion'
-import { MapPin, Clock, Star, X, Handshake, MessageCircle } from 'lucide-react'
+import { useState } from 'react'
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion'
+import { MapPin, Clock, Star, X, Handshake, MessageCircle, ChevronDown, Users } from 'lucide-react'
 import type { Ehrensache } from '../types'
 import { FriendAvatarGroup } from './FriendAvatar'
 import { friends } from '../data/friends'
@@ -17,9 +17,10 @@ interface SwipeCardLargeProps {
 function formatDateRange(start: string, end: string) {
   const s = new Date(start)
   const e = new Date(end)
+  const day = s.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })
   const startTime = s.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
   const endTime = e.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
-  return `${startTime} - ${endTime}`
+  return `${day}, ${startTime} – ${endTime}`
 }
 
 export default function SwipeCardLarge({
@@ -33,17 +34,16 @@ export default function SwipeCardLarge({
   const acceptOpacity = useTransform(x, [30, 110], [0, 1])
   const rejectOpacity = useTransform(x, [-110, -30], [1, 0])
 
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
 
   const handleDragEnd = (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-    if (isScrolled) return
+    if (showDetails) return
     if (info.offset.x > 100 || info.velocity.x > 500) onSwipe('right', ehrensache.id)
     else if (info.offset.x < -100 || info.velocity.x < -500) onSwipe('left', ehrensache.id)
   }
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    setIsScrolled(e.currentTarget.scrollTop > 20)
+  const handleTap = () => {
+    if (isTop) setShowDetails((prev) => !prev)
   }
 
   const timeRange = formatDateRange(ehrensache.date, ehrensache.dateEnd)
@@ -63,12 +63,12 @@ export default function SwipeCardLarge({
         rotate: isTop ? rotate : 0,
         x: isTop ? x : 0,
       }}
-      drag={isTop && !isScrolled ? 'x' : false}
+      drag={isTop && !showDetails ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.65}
       onDragEnd={handleDragEnd}
     >
-      <div className="swipe-card-inner">
+      <div className="swipe-card-inner" onClick={handleTap}>
         {/* Background image */}
         <img
           src={ehrensache.image}
@@ -110,77 +110,174 @@ export default function SwipeCardLarge({
           </span>
           <div className="bg-secondary-container rounded-full px-3 py-1.5 flex items-center gap-1.5">
             <Star size={12} className="text-on-surface fill-on-surface" />
-            <span className="text-on-surface text-xs font-bold">{ehrensache.points} Ehrenpunkte</span>
+            <span className="text-on-surface text-xs font-bold">{ehrensache.points} EP</span>
           </div>
         </div>
 
-        {/* Scrollable content - pushed to bottom */}
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="absolute inset-0 overflow-y-auto rounded-lg"
-          style={{ scrollbarWidth: 'none' }}
-        >
-          {/* Push content to bottom - more space for image */}
-          <div className="h-[64%] shrink-0" />
+        {/* Bottom content - fixed, no scroll */}
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5 z-10">
+          {/* Title */}
+          <h2 className="text-white font-headline font-extrabold text-[26px] leading-tight mb-3">
+            {ehrensache.name}
+          </h2>
 
-          <div className="px-5 pb-5">
-            {/* Title */}
-            <h2 className="text-white font-headline font-extrabold text-[26px] leading-tight mb-3">
-              {ehrensache.name}
-            </h2>
+          {/* Meta pills */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            <span className="flex items-center gap-1.5 glass-dark text-white/90 text-xs font-body px-3 py-1.5 rounded-full">
+              <Clock size={12} className="text-secondary-container" />
+              {timeRange}
+            </span>
+            <span className="flex items-center gap-1.5 glass-dark text-white/90 text-xs font-body px-3 py-1.5 rounded-full">
+              <MapPin size={12} className="text-secondary-container" />
+              {ehrensache.district}
+            </span>
+          </div>
 
-            {/* Meta pills */}
-            <div className="flex flex-wrap gap-2 mb-3">
-              <span className="flex items-center gap-1.5 glass-dark text-white/90 text-xs font-body px-3 py-1.5 rounded-full">
-                <Clock size={12} className="text-secondary-container" />
-                {timeRange}
-              </span>
-              <span className="flex items-center gap-1.5 glass-dark text-white/90 text-xs font-body px-3 py-1.5 rounded-full">
-                <MapPin size={12} className="text-secondary-container" />
-                {ehrensache.district}
+          {/* Friends */}
+          {joiningFriends.length > 0 && (
+            <div className="flex items-center gap-2.5 mb-5">
+              <FriendAvatarGroup friendIds={ehrensache.friendIds} max={3} />
+              <span className="text-white/70 text-xs font-body">
+                {joiningFriends[0].name.split(' ')[0]} & {joiningFriends.length} weitere sind dabei
               </span>
             </div>
+          )}
 
-            {/* Friends */}
-            {joiningFriends.length > 0 && (
-              <div className="flex items-center gap-2.5 mb-5">
-                <FriendAvatarGroup friendIds={ehrensache.friendIds} max={3} />
-                <span className="text-white/70 text-xs font-body">
-                  {joiningFriends[0].name.split(' ')[0]} & {joiningFriends.length} weitere sind dabei
-                </span>
-              </div>
-            )}
-
-            {/* Action buttons ON the card */}
-            {isTop && (
-              <div className="flex items-center justify-center gap-4">
-                <motion.button
-                  whileTap={{ scale: 0.93 }}
-                  onClick={(e) => { e.stopPropagation(); onSwipe('left', ehrensache.id) }}
-                  className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center"
-                >
-                  <X size={24} className="text-white" strokeWidth={2.5} />
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.93 }}
-                  onClick={(e) => { e.stopPropagation(); onSwipe('right', ehrensache.id) }}
-                  className="w-16 h-16 rounded-full bg-primary flex items-center justify-center"
-                  style={{ boxShadow: '0 6px 20px rgba(0,97,255,0.4)' }}
-                >
-                  <Handshake size={26} className="text-on-primary" strokeWidth={2} />
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.93 }}
-                  onClick={(e) => { e.stopPropagation(); onSwipe('chat', ehrensache.id) }}
-                  className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center"
-                >
-                  <MessageCircle size={22} className="text-white" strokeWidth={2} />
-                </motion.button>
-              </div>
-            )}
-          </div>
+          {/* Action buttons ON the card */}
+          {isTop && (
+            <div className="flex items-center justify-center gap-4">
+              <motion.button
+                whileTap={{ scale: 0.93 }}
+                onClick={(e) => { e.stopPropagation(); onSwipe('left', ehrensache.id) }}
+                className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center"
+              >
+                <X size={24} className="text-white" strokeWidth={2.5} />
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.93 }}
+                onClick={(e) => { e.stopPropagation(); onSwipe('right', ehrensache.id) }}
+                className="w-16 h-16 rounded-full bg-primary flex items-center justify-center"
+                style={{ boxShadow: '0 6px 20px rgba(0,97,255,0.4)' }}
+              >
+                <Handshake size={26} className="text-on-primary" strokeWidth={2} />
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.93 }}
+                onClick={(e) => { e.stopPropagation(); onSwipe('chat', ehrensache.id) }}
+                className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center"
+              >
+                <MessageCircle size={22} className="text-white" strokeWidth={2} />
+              </motion.button>
+            </div>
+          )}
         </div>
+
+        {/* Detail overlay - shown on tap */}
+        <AnimatePresence>
+          {showDetails && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 z-30 rounded-lg overflow-y-auto"
+              style={{ scrollbarWidth: 'none' }}
+              onClick={(e) => { e.stopPropagation(); setShowDetails(false) }}
+            >
+              <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+              <div className="relative min-h-full flex flex-col justify-end px-5 pb-6 pt-16">
+                {/* Close hint */}
+                <div className="flex justify-center mb-4">
+                  <motion.div
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    <ChevronDown size={24} className="text-white/50" />
+                  </motion.div>
+                </div>
+
+                {/* Title */}
+                <h2 className="text-white font-headline font-extrabold text-2xl leading-tight mb-4">
+                  {ehrensache.name}
+                </h2>
+
+                {/* Description */}
+                <p className="text-white/80 font-body text-sm leading-relaxed mb-5">
+                  {ehrensache.fullDescription}
+                </p>
+
+                {/* Details grid */}
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <div className="glass-dark rounded-xl px-3.5 py-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Clock size={12} className="text-secondary-container" />
+                      <span className="text-white/50 text-[10px] font-label uppercase tracking-wider">Zeit</span>
+                    </div>
+                    <span className="text-white text-sm font-headline font-semibold">{timeRange}</span>
+                  </div>
+                  <div className="glass-dark rounded-xl px-3.5 py-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <MapPin size={12} className="text-secondary-container" />
+                      <span className="text-white/50 text-[10px] font-label uppercase tracking-wider">Ort</span>
+                    </div>
+                    <span className="text-white text-sm font-headline font-semibold">{ehrensache.district}</span>
+                  </div>
+                  <div className="glass-dark rounded-xl px-3.5 py-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Users size={12} className="text-secondary-container" />
+                      <span className="text-white/50 text-[10px] font-label uppercase tracking-wider">Plätze</span>
+                    </div>
+                    <span className="text-white text-sm font-headline font-semibold">
+                      {ehrensache.currentParticipants}/{ehrensache.maxParticipants}
+                    </span>
+                  </div>
+                  <div className="glass-dark rounded-xl px-3.5 py-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Star size={12} className="text-secondary-container" />
+                      <span className="text-white/50 text-[10px] font-label uppercase tracking-wider">Punkte</span>
+                    </div>
+                    <span className="text-white text-sm font-headline font-semibold">{ehrensache.points} EP</span>
+                  </div>
+                </div>
+
+                {/* Skills */}
+                <div className="flex flex-wrap gap-1.5 mb-5">
+                  {ehrensache.skills.map((s) => (
+                    <span key={s} className="glass-dark text-white/80 text-xs font-body px-3 py-1.5 rounded-full">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center justify-center gap-4">
+                  <motion.button
+                    whileTap={{ scale: 0.93 }}
+                    onClick={(e) => { e.stopPropagation(); onSwipe('left', ehrensache.id) }}
+                    className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center"
+                  >
+                    <X size={24} className="text-white" strokeWidth={2.5} />
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.93 }}
+                    onClick={(e) => { e.stopPropagation(); onSwipe('right', ehrensache.id) }}
+                    className="w-16 h-16 rounded-full bg-primary flex items-center justify-center"
+                    style={{ boxShadow: '0 6px 20px rgba(0,97,255,0.4)' }}
+                  >
+                    <Handshake size={26} className="text-on-primary" strokeWidth={2} />
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.93 }}
+                    onClick={(e) => { e.stopPropagation(); onSwipe('chat', ehrensache.id) }}
+                    className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center"
+                  >
+                    <MessageCircle size={22} className="text-white" strokeWidth={2} />
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   )
