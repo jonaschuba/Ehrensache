@@ -4,6 +4,7 @@ import { RotateCcw, BellDot, Handshake } from 'lucide-react'
 import { ehrensachen } from '../data/ehrensachen'
 import type { Ehrensache } from '../types'
 import SwipeCardLarge from '../components/SwipeCardLarge'
+import EhrensacheDetail from '../components/EhrensacheDetail'
 
 interface SwipePageProps {
   onChatOpen?: (ehrensacheId: string) => void
@@ -18,6 +19,7 @@ export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
   const [bookmarks, setBookmarks] = useState<string[]>([])
   const [showMatch, setShowMatch] = useState<string | null>(null)
   const [gone, setGone] = useState<Ehrensache[]>([])
+  const [detailCard, setDetailCard] = useState<Ehrensache | null>(null)
 
   const swipe = (direction: 'left' | 'right' | 'chat', id: string) => {
     const card = cards.find((c) => c.id === id)
@@ -83,6 +85,7 @@ export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
               isTop={index === 0}
               stackIndex={index}
               onSwipe={swipe}
+              onTap={(e) => setDetailCard(e)}
               onBookmark={toggleBookmark}
               bookmarked={bookmarks.includes(card.id)}
             />
@@ -107,6 +110,16 @@ export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
               <p className="font-body text-xs text-inverse-on-surface/70 truncate">{showMatch}</p>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen detail view */}
+      <AnimatePresence>
+        {detailCard && (
+          <EhrensacheDetail
+            ehrensache={detailCard}
+            onClose={() => setDetailCard(null)}
+          />
         )}
       </AnimatePresence>
     </div>
