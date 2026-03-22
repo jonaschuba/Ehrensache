@@ -5,6 +5,7 @@ import { ehrensachen } from '../data/ehrensachen'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import SectionHeader from '../components/SectionHeader'
+import HorizontalScroll from '../components/HorizontalScroll'
 
 function getSuggestedEhrensache(pointsNeeded: number) {
   return ehrensachen.find((e) => e.points >= pointsNeeded * 0.5 && e.status === 'swipe')
@@ -72,8 +73,7 @@ export default function ProfilePage() {
       {/* Rewards / Coupons */}
       <div className="pb-4">
         <SectionHeader title="Deine Belohnungen" action="Alle ansehen" className="px-5 mb-3" />
-        <div className="overflow-x-auto pl-5 pr-2" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex gap-3" style={{ width: 'max-content', paddingRight: 20 }}>
+        <HorizontalScroll className="pl-5">
             {coupons.map((coupon) => {
               const userPoints = currentUser.ehrenpunkte
               const progress = Math.min((userPoints / coupon.pointsRequired) * 100, 100)
@@ -115,8 +115,7 @@ export default function ProfilePage() {
                 </div>
               )
             })}
-          </div>
-        </div>
+        </HorizontalScroll>
 
         {/* Suggested Ehrensache */}
         {nextCoupon && suggestedEhrensache && (

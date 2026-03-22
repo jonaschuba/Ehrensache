@@ -4,6 +4,7 @@ import { friends } from '../data/friends'
 import { ehrensachen } from '../data/ehrensachen'
 import PageHeader from '../components/PageHeader'
 import SectionHeader from '../components/SectionHeader'
+import HorizontalScroll from '../components/HorizontalScroll'
 
 const leaderboard = [
   { name: 'Elena S.', initials: 'ES', rankingpunkte: 12840, color: '#7C3AED' },
@@ -57,8 +58,7 @@ export default function RankingPage() {
       {/* Friends in Action */}
       <div className="px-5 pb-4">
         <SectionHeader title="Friends in Action" action="Alle ansehen" className="mb-3" />
-        <div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex gap-3" style={{ width: 'max-content', paddingRight: 20 }}>
+        <HorizontalScroll>
             {friendActivity.map(({ friend, ehrensache }) =>
               ehrensache ? (
                 <div key={friend.id} className="w-56 bg-surface-container-lowest rounded-lg overflow-hidden card-ambient shrink-0">
@@ -81,8 +81,7 @@ export default function RankingPage() {
                 </div>
               ) : null
             )}
-          </div>
-        </div>
+        </HorizontalScroll>
       </div>
 
       {/* Top Performer */}

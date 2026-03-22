@@ -5,6 +5,7 @@ import CheckInButton from '../components/CheckInButton'
 import RatingStars from '../components/RatingStars'
 import PageHeader from '../components/PageHeader'
 import SectionHeader from '../components/SectionHeader'
+import PillTabs from '../components/PillTabs'
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' })
@@ -24,9 +25,9 @@ export default function EhrensachenPage() {
   const [ratings, setRatings] = useState<Record<string, number>>({})
   const [activeTab, setActiveTab] = useState<TabKey>('current')
 
-  const tabs: { key: TabKey; label: string; count: number }[] = [
-    { key: 'current', label: 'Active', count: currentEhrensachen.length },
-    { key: 'completed', label: 'Completed', count: completedEhrensachen.length },
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: 'current', label: 'Active' },
+    { key: 'completed', label: 'Completed' },
   ]
 
   return (
@@ -35,21 +36,7 @@ export default function EhrensachenPage() {
 
       {/* Tab bar */}
       <div className="px-5 pb-3 shrink-0">
-        <div className="flex gap-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 rounded-full text-xs font-label font-bold transition-colors ${
-                activeTab === tab.key
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-surface-container text-on-surface-variant'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <PillTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
       </div>
 
       {/* Content */}
