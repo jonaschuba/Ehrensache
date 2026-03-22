@@ -14,26 +14,26 @@ export default function CouponCard({ coupon, onRedeem }: CouponCardProps) {
   const canRedeem = userPoints >= coupon.pointsRequired
 
   return (
-    <div className="coupon-card" style={{ '--coupon-color': coupon.color } as React.CSSProperties}>
-      <div className="coupon-header">
-        <div className="coupon-icon" style={{ background: coupon.color + '22', color: coupon.color }}>
+    <div className="bg-surface-container-lowest rounded-lg p-4 card-ambient">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: coupon.color + '22', color: coupon.color }}>
           <Ticket size={18} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-slate-400 font-medium truncate">{coupon.partner}</p>
-          <p className="text-sm font-bold text-slate-800 truncate">{coupon.name}</p>
+          <p className="font-body text-xs text-on-surface-variant font-medium truncate">{coupon.partner}</p>
+          <p className="font-headline text-sm font-bold text-on-surface truncate">{coupon.name}</p>
         </div>
-        <span className="text-xs font-bold" style={{ color: coupon.color }}>
+        <span className="font-label text-xs font-bold" style={{ color: coupon.color }}>
           {coupon.pointsRequired} EP
         </span>
       </div>
 
       <div className="mt-2.5">
-        <div className="flex justify-between text-xs mb-1.5">
-          <span className="text-slate-500">{canRedeem ? 'Einlösbar!' : `Noch ${missing} EP`}</span>
-          <span className="font-semibold text-slate-700">{Math.round(progress)}%</span>
+        <div className="flex justify-between font-body text-xs mb-1.5">
+          <span className="text-on-surface-variant">{canRedeem ? 'Einlösbar!' : `Noch ${missing} EP`}</span>
+          <span className="font-semibold text-on-surface">{Math.round(progress)}%</span>
         </div>
-        <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{ width: `${progress}%`, background: coupon.color }}
@@ -44,7 +44,7 @@ export default function CouponCard({ coupon, onRedeem }: CouponCardProps) {
       {canRedeem && (
         <button
           onClick={onRedeem}
-          className="mt-3 w-full flex items-center justify-center gap-1 text-xs font-semibold py-2 rounded-lg text-white"
+          className="mt-3 w-full flex items-center justify-center gap-1 font-label text-xs font-bold py-2 rounded-full text-white"
           style={{ background: coupon.color }}
         >
           Jetzt einlösen <ChevronRight size={14} />
