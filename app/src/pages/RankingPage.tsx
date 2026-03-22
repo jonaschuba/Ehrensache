@@ -95,7 +95,7 @@ export default function RankingPage() {
             <div
               key={person.name}
               className={`flex items-center gap-3 px-4 py-3.5 ${
-                i < 2 ? 'border-b border-surface-container' : ''
+                i % 2 === 1 ? 'bg-surface-container-low/50' : ''
               }`}
             >
               <span className="w-7 text-center font-headline font-bold text-on-surface-variant text-sm">
@@ -118,9 +118,9 @@ export default function RankingPage() {
             </div>
           ))}
 
-          {/* User entry */}
-          <div className="border-t-2 border-surface-container">
-            <div className="flex items-center gap-3 px-4 py-3.5 bg-primary/5">
+          {/* User entry - separated by tonal shift */}
+          <div className="bg-primary/5">
+            <div className="flex items-center gap-3 px-4 py-3.5">
               <span className="w-7 text-center font-headline font-bold text-primary text-sm">
                 {userRank}
               </span>

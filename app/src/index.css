@@ -5,15 +5,6 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --border: 230 20% 85%;
-    --input: 230 20% 85%;
-    --ring: 220 100% 50%;
-    --radius: 1rem;
-  }
-}
-
-@layer base {
   * { box-sizing: border-box; }
   body { background: #faf8ff; color: #191b24; }
 }
