@@ -4,6 +4,7 @@ import { coupons } from '../data/coupons'
 import { ehrensachen } from '../data/ehrensachen'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import SectionHeader from '../components/SectionHeader'
 
 function getSuggestedEhrensache(pointsNeeded: number) {
   return ehrensachen.find((e) => e.points >= pointsNeeded * 0.5 && e.status === 'swipe')
@@ -70,10 +71,7 @@ export default function ProfilePage() {
 
       {/* Rewards / Coupons */}
       <div className="pb-4">
-        <div className="flex items-center justify-between px-5 mb-3">
-          <h3 className="font-headline font-bold text-on-surface text-base">Deine Belohnungen</h3>
-          <button className="font-label text-xs text-primary font-semibold">Alle ansehen</button>
-        </div>
+        <SectionHeader title="Deine Belohnungen" action="Alle ansehen" className="px-5 mb-3" />
         <div className="overflow-x-auto pl-5 pr-2" style={{ scrollbarWidth: 'none' }}>
           <div className="flex gap-3" style={{ width: 'max-content', paddingRight: 20 }}>
             {coupons.map((coupon) => {
@@ -87,7 +85,7 @@ export default function ProfilePage() {
                   <div className="h-20 overflow-hidden relative">
                     {imgSrc && <img src={imgSrc} alt="" className="w-full h-full object-cover" />}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    <span className="absolute top-2 left-2.5 bg-surface-container-lowest/80 text-on-surface text-[9px] font-label font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                    <span className="absolute top-2 left-2.5 badge-label bg-surface-container-lowest/80 text-on-surface">
                       {coupon.category}
                     </span>
                   </div>
@@ -134,7 +132,7 @@ export default function ProfilePage() {
 
       {/* Profile sections */}
       <div className="px-5 pb-8 space-y-2">
-        <h3 className="font-headline font-bold text-on-surface text-base mb-3">Mein Profil</h3>
+        <SectionHeader title="Mein Profil" className="mb-3" />
 
         <ProfileSection
           title="Skills"

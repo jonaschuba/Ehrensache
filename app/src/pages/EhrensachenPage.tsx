@@ -4,6 +4,7 @@ import { upcomingEhrensachen, activeEhrensachen, completedEhrensachen } from '..
 import CheckInButton from '../components/CheckInButton'
 import RatingStars from '../components/RatingStars'
 import PageHeader from '../components/PageHeader'
+import SectionHeader from '../components/SectionHeader'
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' })
@@ -64,12 +65,12 @@ export default function EhrensachenPage() {
                 <div key={e.id} className="space-y-2">
                   {/* Section label */}
                   {isActive && index === 0 && (
-                    <span className="inline-block bg-secondary-container text-on-surface text-[10px] font-label font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                    <span className="badge-label bg-secondary-container text-on-surface">
                       Today's Mission
                     </span>
                   )}
                   {!isActive && index === activeEhrensachen.length && (
-                    <p className="font-headline font-bold text-on-surface text-base mt-2">Bevorstehend</p>
+                    <SectionHeader title="Bevorstehend" className="mt-2" />
                   )}
 
                   <div className="bg-surface-container-lowest rounded-lg overflow-hidden card-ambient">
@@ -83,7 +84,7 @@ export default function EhrensachenPage() {
                           <span className="text-white text-xs font-label font-semibold">Läuft jetzt</span>
                         </div>
                       )}
-                      <span className="absolute top-3 right-3 bg-secondary-container text-on-surface text-xs font-label font-bold px-2.5 py-1 rounded-full">
+                      <span className="absolute top-3 right-3 badge-label bg-secondary-container text-on-surface">
                         +{e.points} EP
                       </span>
                     </div>
@@ -121,7 +122,7 @@ export default function EhrensachenPage() {
 
             {/* Monthly impact celebration */}
             <div className="bg-gradient-to-br from-primary to-primary-container rounded-lg p-5 text-on-primary">
-              <span className="inline-block bg-on-primary/20 text-on-primary text-[10px] font-label font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3">
+              <span className="badge-label bg-on-primary/20 text-on-primary mb-3">
                 Monthly Rewards
               </span>
               <h3 className="font-headline font-extrabold text-xl mb-1">You did it!</h3>

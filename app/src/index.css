@@ -212,6 +212,30 @@ html, body, #root {
   font-family: 'Be Vietnam Pro', sans-serif;
 }
 
+/* ---- Reusable Patterns ---- */
+
+/* Category / label badge - small uppercase pill */
+.badge-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* Stat label - tiny uppercase descriptor */
+.stat-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424656;
+}
+
 /* ---- Surface "No-Line" Rule ---- */
 .surface-card {
   background: #ffffff;

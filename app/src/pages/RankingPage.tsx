@@ -3,6 +3,7 @@ import { currentUser } from '../data/user'
 import { friends } from '../data/friends'
 import { ehrensachen } from '../data/ehrensachen'
 import PageHeader from '../components/PageHeader'
+import SectionHeader from '../components/SectionHeader'
 
 const leaderboard = [
   { name: 'Elena S.', initials: 'ES', rankingpunkte: 12840, color: '#7C3AED' },
@@ -35,7 +36,7 @@ export default function RankingPage() {
       <div className="px-5 pb-5">
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-surface-container-lowest rounded-lg p-4 card-ambient">
-            <p className="font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Rankingpunkte</p>
+            <p className="stat-label mb-1">Rankingpunkte</p>
             <div className="flex items-baseline gap-2">
               <p className="font-headline text-3xl font-extrabold text-on-surface">{currentUser.rankingpunkte.toLocaleString()}</p>
               <TrendingUp size={16} className="text-primary" />
@@ -43,7 +44,7 @@ export default function RankingPage() {
             <p className="font-body text-[11px] text-on-surface-variant mt-1">Gesamtpunktzahl für deinen globalen Rang</p>
           </div>
           <div className="bg-surface-container-lowest rounded-lg p-4 card-ambient">
-            <p className="font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Ehrenpunkte</p>
+            <p className="stat-label mb-1">Ehrenpunkte</p>
             <div className="flex items-baseline gap-2">
               <p className="font-headline text-3xl font-extrabold text-on-surface">{currentUser.ehrenpunkte.toLocaleString()}</p>
               <Star size={16} className="text-secondary" />
@@ -55,10 +56,7 @@ export default function RankingPage() {
 
       {/* Friends in Action */}
       <div className="px-5 pb-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-headline font-bold text-on-surface text-base">Friends in Action</h3>
-          <button className="font-label text-xs text-primary font-semibold">Alle ansehen</button>
-        </div>
+        <SectionHeader title="Friends in Action" action="Alle ansehen" className="mb-3" />
         <div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           <div className="flex gap-3" style={{ width: 'max-content', paddingRight: 20 }}>
             {friendActivity.map(({ friend, ehrensache }) =>
@@ -67,7 +65,7 @@ export default function RankingPage() {
                   <div className="h-28 overflow-hidden relative">
                     <img src={ehrensache.image} alt="" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <span className="absolute top-2.5 left-2.5 bg-secondary-container text-on-surface text-[10px] font-label font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                    <span className="absolute top-2.5 left-2.5 badge-label bg-secondary-container text-on-surface">
                       Umwelt
                     </span>
                   </div>
@@ -89,7 +87,7 @@ export default function RankingPage() {
 
       {/* Top Performer */}
       <div className="px-5 pb-8">
-        <h3 className="font-headline font-bold text-on-surface text-base mb-3">Top Performer</h3>
+        <SectionHeader title="Top Performer" className="mb-3" />
         <div className="bg-surface-container-lowest rounded-lg overflow-hidden card-ambient">
           {sorted.slice(0, 3).map((person, i) => (
             <div
