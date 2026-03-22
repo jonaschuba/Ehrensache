@@ -15,7 +15,7 @@ export default function FriendAvatar({ friendId, size = 'sm', showName = false }
   return (
     <div className="flex flex-col items-center gap-1">
       <div
-        className="rounded-full flex items-center justify-center text-white font-bold border-2 border-white shadow-sm"
+        className="rounded-full flex items-center justify-center text-white font-bold border-2 border-white"
         style={{
           width: dim,
           height: dim,
@@ -26,7 +26,7 @@ export default function FriendAvatar({ friendId, size = 'sm', showName = false }
         {friend.initials}
       </div>
       {showName && (
-        <span className="text-xs text-slate-500 font-medium">{friend.name.split(' ')[0]}</span>
+        <span className="text-xs text-on-surface-variant font-body font-medium">{friend.name.split(' ')[0]}</span>
       )}
     </div>
   )
@@ -49,10 +49,12 @@ export function FriendAvatarGroup({ friendIds, max = 3 }: FriendAvatarGroupProps
         return (
           <div
             key={id}
-            className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold border-2 border-white"
+            className="rounded-full flex items-center justify-center text-white font-semibold border-2 border-white"
             style={{
+              width: 28,
+              height: 28,
               background: friend.color,
-              fontSize: 10,
+              fontSize: 9,
               marginLeft: i > 0 ? -8 : 0,
               zIndex: shown.length - i,
             }}
@@ -63,8 +65,8 @@ export function FriendAvatarGroup({ friendIds, max = 3 }: FriendAvatarGroupProps
       })}
       {extra > 0 && (
         <div
-          className="w-7 h-7 rounded-full flex items-center justify-center bg-slate-200 text-slate-600 font-bold border-2 border-white"
-          style={{ fontSize: 10, marginLeft: -8 }}
+          className="rounded-full flex items-center justify-center bg-surface-container-high text-on-surface-variant font-bold border-2 border-white"
+          style={{ width: 28, height: 28, fontSize: 10, marginLeft: -8 }}
         >
           +{extra}
         </div>

@@ -1,184 +1,176 @@
 import { useState } from 'react'
-import { Calendar, MapPin, Clock, Share2, MessageCircle } from 'lucide-react'
+import { Clock, MapPin, Share2, MessageCircle } from 'lucide-react'
 import { upcomingEhrensachen, activeEhrensachen, completedEhrensachen } from '../data/ehrensachen'
 import CheckInButton from '../components/CheckInButton'
 import RatingStars from '../components/RatingStars'
-import PointsBadge from '../components/PointsBadge'
-import { FriendAvatarGroup } from '../components/FriendAvatar'
-
-type Section = 'upcoming' | 'active' | 'completed'
+import PageHeader from '../components/PageHeader'
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long' })
+  return new Date(dateStr).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' })
 }
 function formatTime(start: string, end: string) {
   const s = new Date(start).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
   const e = new Date(end).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
-  return `${s} – ${e} Uhr`
+  return `${s}–${e}`
 }
 
-export default function EhrensachenPage() {
-  const [section, setSection] = useState<Section>('upcoming')
-  const [ratings, setRatings] = useState<Record<string, number>>({})
+type TabKey = 'current' | 'completed'
 
-  const sections: { id: Section; label: string; count: number }[] = [
-    { id: 'upcoming', label: 'Bevorstehend', count: upcomingEhrensachen.length },
-    { id: 'active', label: 'Aktiv', count: activeEhrensachen.length },
-    { id: 'completed', label: 'Abgeschlossen', count: completedEhrensachen.length },
+// Combine active + upcoming, active first
+const currentEhrensachen = [...activeEhrensachen, ...upcomingEhrensachen]
+
+export default function EhrensachenPage() {
+  const [ratings, setRatings] = useState<Record<string, number>>({})
+  const [activeTab, setActiveTab] = useState<TabKey>('current')
+
+  const tabs: { key: TabKey; label: string; count: number }[] = [
+    { key: 'current', label: 'Active', count: currentEhrensachen.length },
+    { key: 'completed', label: 'Completed', count: completedEhrensachen.length },
   ]
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="px-4 pt-4 pb-3 shrink-0">
-        <h1 className="text-xl font-black text-slate-800">Meine Ehrensachen</h1>
-        <p className="text-xs text-slate-400">Deine gematchten Aktionen</p>
-      </div>
+    <div className="flex flex-col h-full bg-surface">
+      <PageHeader title="Meine Matches" />
 
-      {/* Segment control */}
-      <div className="px-4 mb-4 shrink-0">
-        <div className="bg-slate-100 rounded-2xl p-1 flex gap-1">
-          {sections.map(({ id, label, count }) => (
+      {/* Tab bar */}
+      <div className="px-5 pb-3 shrink-0">
+        <div className="flex gap-2">
+          {tabs.map((tab) => (
             <button
-              key={id}
-              onClick={() => setSection(id)}
-              className={`flex-1 py-2 px-2 rounded-xl text-xs font-bold transition-all ${
-                section === id
-                  ? 'bg-white text-primary shadow-sm'
-                  : 'text-slate-500'
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-4 py-2 rounded-full text-xs font-label font-bold transition-colors ${
+                activeTab === tab.key
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container text-on-surface-variant'
               }`}
             >
-              {label}
-              {count > 0 && (
-                <span className={`ml-1 text-xs ${section === id ? 'text-primary' : 'text-slate-400'}`}>
-                  ({count})
-                </span>
-              )}
+              {tab.label}
             </button>
           ))}
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3" style={{ scrollbarWidth: 'none' }}>
-        {section === 'upcoming' && (
-          <>
-            {upcomingEhrensachen.length === 0 && (
-              <EmptyState text="Noch keine gematchten Ehrensachen. Geh zum Swipe-Tab und finde deine nächste!" />
-            )}
-            {upcomingEhrensachen.map((e) => (
-              <div key={e.id} className="bg-white rounded-2xl shadow-card overflow-hidden">
-                <div className="h-20 w-full" style={{ background: e.gradient }} />
-                <div className="p-4">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <h3 className="font-bold text-slate-800 text-sm leading-tight">{e.name}</h3>
-                    <PointsBadge points={e.points} size="sm" />
-                  </div>
-                  <p className="text-xs text-primary font-semibold mb-2">{e.organization}</p>
-                  <div className="flex flex-col gap-1 mb-3">
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                      <Calendar size={12} />
-                      {formatDate(e.date)}
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                      <Clock size={12} />
-                      {formatTime(e.date, e.dateEnd)}
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                      <MapPin size={12} />
-                      {e.location}
-                    </div>
-                  </div>
-                  {e.friendIds.length > 0 && (
-                    <div className="flex items-center gap-2 mb-3">
-                      <FriendAvatarGroup friendIds={e.friendIds} max={3} />
-                      <span className="text-xs text-slate-500">auch dabei</span>
-                    </div>
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 pb-4" style={{ scrollbarWidth: 'none' }}>
+        {/* Current (Active + Upcoming) */}
+        {activeTab === 'current' && (
+          <div className="space-y-4">
+            {currentEhrensachen.length === 0 && <EmptyState text="Noch keine gematchten Ehrensachen." />}
+
+            {currentEhrensachen.map((e, index) => {
+              const isActive = e.status === 'active'
+              return (
+                <div key={e.id} className="space-y-2">
+                  {/* Section label */}
+                  {isActive && index === 0 && (
+                    <span className="inline-block bg-secondary-container text-on-surface text-[10px] font-label font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                      Today's Mission
+                    </span>
                   )}
-                  <button className="w-full flex items-center justify-center gap-2 bg-primary-light text-primary rounded-xl py-2.5 text-sm font-semibold">
-                    <Calendar size={15} />
-                    Zum Kalender hinzufügen
-                  </button>
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+                  {!isActive && index === activeEhrensachen.length && (
+                    <p className="font-headline font-bold text-on-surface text-base mt-2">Bevorstehend</p>
+                  )}
 
-        {section === 'active' && (
-          <>
-            {activeEhrensachen.length === 0 && (
-              <EmptyState text="Heute keine aktiven Ehrensachen." />
-            )}
-            {activeEhrensachen.map((e) => (
-              <div key={e.id} className="bg-white rounded-2xl shadow-card overflow-hidden border-l-4 border-secondary">
-                <div className="p-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 bg-secondary rounded-full animate-pulse" />
-                    <span className="text-xs font-bold text-secondary uppercase tracking-wide">Läuft gerade</span>
-                  </div>
-                  <h3 className="font-bold text-slate-800 text-sm mb-0.5">{e.name}</h3>
-                  <p className="text-xs text-primary font-semibold mb-3">{e.organization}</p>
-                  <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-4">
-                    <MapPin size={12} />
-                    {e.location}
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <CheckInButton ehrensacheName={e.name} />
+                  <div className="bg-surface-container-lowest rounded-lg overflow-hidden card-ambient">
+                    {/* Image */}
+                    <div className="h-36 w-full overflow-hidden relative">
+                      <img src={e.image} alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      {isActive && (
+                        <div className="absolute bottom-3 left-4 flex items-center gap-1.5">
+                          <span className="w-2 h-2 bg-secondary-container rounded-full animate-pulse" />
+                          <span className="text-white text-xs font-label font-semibold">Läuft jetzt</span>
+                        </div>
+                      )}
+                      <span className="absolute top-3 right-3 bg-secondary-container text-on-surface text-xs font-label font-bold px-2.5 py-1 rounded-full">
+                        +{e.points} EP
+                      </span>
                     </div>
-                    <button className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center">
-                      <MessageCircle size={18} className="text-slate-600" />
-                    </button>
+
+                    <div className="p-4">
+                      <h3 className="font-headline font-bold text-on-surface text-base leading-snug mb-0.5">{e.name}</h3>
+                      <p className="font-body text-xs text-primary font-semibold mb-2">{e.organization}</p>
+
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4">
+                        <span className="flex items-center gap-1 font-body text-xs text-on-surface-variant">
+                          <Clock size={11} className="text-outline" />
+                          {formatDate(e.date)} · {formatTime(e.date, e.dateEnd)}
+                        </span>
+                        <span className="flex items-center gap-1 font-body text-xs text-on-surface-variant">
+                          <MapPin size={11} className="text-outline" />
+                          {e.district}
+                        </span>
+                      </div>
+
+                      {/* Buttons: Check-In + Chat, same height */}
+                      {isActive && (
+                        <div className="flex gap-2">
+                          <div className="flex-1"><CheckInButton /></div>
+                          <button className="h-[46px] px-4 rounded-full bg-surface-container flex items-center justify-center gap-1.5 text-on-surface-variant font-label font-semibold text-sm">
+                            <MessageCircle size={16} />
+                            Chat
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </>
+              )
+            })}
+
+            {/* Monthly impact celebration */}
+            <div className="bg-gradient-to-br from-primary to-primary-container rounded-lg p-5 text-on-primary">
+              <span className="inline-block bg-on-primary/20 text-on-primary text-[10px] font-label font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3">
+                Monthly Rewards
+              </span>
+              <h3 className="font-headline font-extrabold text-xl mb-1">You did it!</h3>
+              <p className="font-body text-sm text-on-primary/80 mb-2">12h of real impact this month.</p>
+              <p className="font-headline font-bold text-secondary-container text-lg mb-4">+500 Ehrenpunkte</p>
+              <button className="w-full bg-on-primary/20 text-on-primary rounded-full py-2.5 font-label font-bold text-sm">
+                Share to Instagram Stories
+              </button>
+            </div>
+          </div>
         )}
 
-        {section === 'completed' && (
-          <>
-            {completedEhrensachen.length === 0 && (
-              <EmptyState text="Noch keine abgeschlossenen Ehrensachen." />
-            )}
+        {/* Completed tab */}
+        {activeTab === 'completed' && (
+          <div className="space-y-3">
+            {completedEhrensachen.length === 0 && <EmptyState text="Noch keine abgeschlossenen Ehrensachen." />}
             {completedEhrensachen.map((e) => (
-              <div key={e.id} className="bg-white rounded-2xl shadow-card overflow-hidden">
-                <div className="h-16 w-full relative" style={{ background: e.gradient }}>
-                  <div className="absolute inset-0 bg-black/20" />
-                  <div className="absolute bottom-2 right-3">
-                    <PointsBadge points={e.points} size="sm" variant="white" />
-                  </div>
+              <div key={e.id} className="bg-surface-container-lowest rounded-lg overflow-hidden card-ambient">
+                <div className="h-24 w-full overflow-hidden relative">
+                  <img src={e.image} alt="" className="w-full h-full object-cover grayscale-[30%]" />
+                  <div className="absolute inset-0 bg-black/30" />
+                  <span className="absolute top-3 right-3 bg-secondary-container text-on-surface text-xs font-label font-bold px-2.5 py-1 rounded-full">
+                    +{e.points} EP
+                  </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-bold text-slate-800 text-sm mb-0.5">{e.name}</h3>
-                  <p className="text-xs text-slate-400 mb-3">{e.organization}</p>
+                  <h3 className="font-headline font-bold text-on-surface text-sm mb-0.5">{e.name}</h3>
+                  <p className="font-body text-xs text-on-surface-variant mb-3">{e.organization}</p>
 
                   {e.impactText && (
-                    <div className="bg-secondary-light rounded-xl p-3 mb-3">
-                      <p className="text-xs font-semibold text-secondary mb-1">💚 Deine Wirkung</p>
-                      <p className="text-xs text-slate-700 leading-relaxed">{e.impactText}</p>
-                    </div>
+                    <p className="font-body text-xs text-on-surface leading-relaxed bg-secondary-container/30 rounded-md px-3 py-2.5 mb-3">
+                      {e.impactText}
+                    </p>
                   )}
 
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-400 mb-1">Deine Bewertung:</p>
-                      <RatingStars
-                        value={ratings[e.id] ?? e.rating ?? 0}
-                        onChange={(v) => setRatings((prev) => ({ ...prev, [e.id]: v }))}
-                        size={18}
-                      />
-                    </div>
-                    <button className="flex items-center gap-1.5 bg-slate-100 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600">
-                      <Share2 size={13} />
-                      Teilen
+                    <RatingStars
+                      value={ratings[e.id] ?? e.rating ?? 0}
+                      onChange={(v) => setRatings((prev) => ({ ...prev, [e.id]: v }))}
+                      size={18}
+                    />
+                    <button className="flex items-center gap-1.5 text-xs text-on-surface-variant font-label font-medium">
+                      <Share2 size={12} /> Teilen
                     </button>
                   </div>
                 </div>
               </div>
             ))}
-          </>
+          </div>
         )}
       </div>
     </div>
@@ -187,9 +179,8 @@ export default function EhrensachenPage() {
 
 function EmptyState({ text }: { text: string }) {
   return (
-    <div className="text-center py-12 px-4">
-      <div className="text-4xl mb-3">✨</div>
-      <p className="text-sm text-slate-500">{text}</p>
+    <div className="text-center py-16">
+      <p className="font-body text-sm text-on-surface-variant">{text}</p>
     </div>
   )
 }

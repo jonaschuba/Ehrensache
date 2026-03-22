@@ -27,7 +27,7 @@ export default function RatingStars({ value = 0, onChange, readOnly = false, siz
             <Star
               size={size}
               strokeWidth={1.5}
-              className={filled ? 'text-amber-400 fill-amber-400' : 'text-slate-300 fill-slate-100'}
+              className={filled ? 'text-tertiary-fixed-dim fill-tertiary-fixed-dim' : 'text-outline-variant fill-surface-container'}
             />
           </button>
         )

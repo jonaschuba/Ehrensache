@@ -2,11 +2,7 @@ import { useState } from 'react'
 import { CheckCircle, MapPin } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-interface CheckInButtonProps {
-  ehrensacheName?: string
-}
-
-export default function CheckInButton({ }: CheckInButtonProps) {
+export default function CheckInButton() {
   const [checked, setChecked] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -25,9 +21,9 @@ export default function CheckInButton({ }: CheckInButtonProps) {
           key="done"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="flex items-center gap-2 bg-secondary-light text-secondary rounded-xl px-4 py-3 font-semibold text-sm"
+          className="flex items-center gap-2 bg-secondary-container text-on-surface rounded-full px-5 py-3 font-label font-semibold text-sm justify-center"
         >
-          <CheckCircle size={18} className="fill-secondary text-white" />
+          <CheckCircle size={18} className="text-secondary" />
           Check-in bestätigt!
         </motion.div>
       ) : (
@@ -36,14 +32,14 @@ export default function CheckInButton({ }: CheckInButtonProps) {
           whileTap={{ scale: 0.96 }}
           onClick={handleCheckIn}
           disabled={loading}
-          className="flex items-center gap-2 bg-primary text-white rounded-xl px-4 py-3 font-semibold text-sm shadow-md active:shadow-sm transition-all w-full justify-center"
+          className="flex items-center gap-2 bg-secondary text-on-secondary rounded-full px-5 py-3 font-label font-bold text-sm w-full justify-center transition-all"
         >
           {loading ? (
             <span className="loader-small" />
           ) : (
             <MapPin size={16} />
           )}
-          {loading ? 'Bestätige...' : 'Jetzt einchecken'}
+          {loading ? 'Bestätige...' : 'Check-In'}
         </motion.button>
       )}
     </AnimatePresence>

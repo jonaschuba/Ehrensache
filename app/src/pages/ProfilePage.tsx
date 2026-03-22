@@ -1,27 +1,25 @@
-import { Zap, TrendingUp, ChevronRight, Award, Briefcase, GraduationCap, Edit3 } from 'lucide-react'
+import { ChevronRight, Award, Briefcase, GraduationCap, Star, Handshake } from 'lucide-react'
 import { currentUser } from '../data/user'
 import { coupons } from '../data/coupons'
 import { ehrensachen } from '../data/ehrensachen'
-import CouponCard from '../components/CouponCard'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-
-const levelColors = [
-  '', // 0
-  '#94A3B8', // 1
-  '#64748B', // 2
-  '#D97706', // 3
-  '#2563EB', // 4 - current
-  '#7C3AED', // 5
-  '#DC2626', // 6
-  '#EA580C', // 7
-  '#059669', // 8
-]
 
 function getSuggestedEhrensache(pointsNeeded: number) {
   return ehrensachen.find((e) => e.points >= pointsNeeded * 0.5 && e.status === 'swipe')
     ?? ehrensachen.find((e) => e.status === 'swipe')
 }
+
+const couponImages: Record<string, string> = {
+  cp1: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&h=200&fit=crop&q=80',
+  cp2: 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=400&h=200&fit=crop&q=80',
+  cp3: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=200&fit=crop&q=80',
+  cp4: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&h=200&fit=crop&q=80',
+  cp5: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=200&fit=crop&q=80',
+}
+
+const completedCount = ehrensachen.filter((e) => e.status === 'completed').length +
+  currentUser.experience.length
 
 export default function ProfilePage() {
   const [redeemed, setRedeemed] = useState<string[]>([])
@@ -34,10 +32,6 @@ export default function ProfilePage() {
     setTimeout(() => setRedeemToast(null), 2500)
   }
 
-  const userColor = levelColors[currentUser.level] ?? '#2563EB'
-  const progressPct = (currentUser.ehrenpunkte / currentUser.nextLevelPoints) * 100
-
-  // Find closest coupon not yet reachable
   const nextCoupon = coupons
     .filter((c) => c.pointsRequired > currentUser.ehrenpunkte && !redeemed.includes(c.id))
     .sort((a, b) => a.pointsRequired - b.pointsRequired)[0]
@@ -46,113 +40,111 @@ export default function ProfilePage() {
     : null
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pb-4" style={{ scrollbarWidth: 'none' }}>
-      {/* Hero */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 px-4 pt-10 pb-6 relative overflow-hidden">
-        <div
-          className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-10 -translate-y-1/2 translate-x-1/4"
-          style={{ background: userColor }}
-        />
-        <div className="flex items-start justify-between relative z-10">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg"
-              style={{ background: userColor }}
-            >
-              {currentUser.initials}
-            </div>
-            <div>
-              <h2 className="text-white font-black text-lg">{currentUser.name}</h2>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span
-                  className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
-                  style={{ background: userColor + '55' }}
-                >
-                  Lvl {currentUser.level} · {currentUser.levelName}
-                </span>
-              </div>
-            </div>
-          </div>
-          <button className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-            <Edit3 size={15} className="text-white" />
-          </button>
-        </div>
+    <div className="flex flex-col h-full overflow-y-auto bg-surface" style={{ scrollbarWidth: 'none' }}>
+      {/* Ehrensache Logo - only on Profile */}
+      <div className="px-5 pt-6 pb-3 shrink-0 flex items-center gap-2">
+        <Handshake size={22} className="text-primary" strokeWidth={2.5} />
+        <span className="font-headline text-lg font-bold text-primary tracking-wide">Ehrensache</span>
+      </div>
 
-        {/* Points overview */}
-        <div className="grid grid-cols-2 gap-3 mt-5 relative z-10">
-          <div className="bg-white/10 rounded-2xl p-3">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Zap size={13} className="text-amber-400 fill-amber-400" />
-              <span className="text-xs text-slate-300 font-medium">Ehrenpunkte</span>
-            </div>
-            <p className="text-2xl font-black text-white">{currentUser.ehrenpunkte.toLocaleString()}</p>
-            <div className="mt-1.5 h-1 bg-white/20 rounded-full">
-              <div
-                className="h-full rounded-full bg-amber-400 transition-all"
-                style={{ width: `${Math.min(progressPct, 100)}%` }}
-              />
-            </div>
-            <p className="text-xs text-slate-400 mt-1">von {currentUser.nextLevelPoints} für Lvl {currentUser.level + 1}</p>
+      {/* Profile header */}
+      <div className="px-5 pb-6 flex flex-col items-center text-center">
+        <div className="relative mb-3">
+          <div className="w-20 h-20 rounded-full overflow-hidden ring-4 ring-surface-container">
+            <img
+              src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&q=80"
+              alt=""
+              className="w-full h-full object-cover"
+            />
           </div>
-          <div className="bg-white/10 rounded-2xl p-3">
-            <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp size={13} className="text-green-400" />
-              <span className="text-xs text-slate-300 font-medium">Rankingpunkte</span>
-            </div>
-            <p className="text-2xl font-black text-white">{currentUser.rankingpunkte.toLocaleString()}</p>
-            <p className="text-xs text-slate-400 mt-2.5">Kumuliert · steigt nie</p>
-          </div>
+          <span className="absolute -bottom-1 -right-1 bg-primary text-on-primary text-[10px] font-label font-bold px-2 py-0.5 rounded-full">
+            #{currentUser.rankingpunkte.toLocaleString()}
+          </span>
+        </div>
+        <h2 className="font-headline text-xl font-extrabold text-on-surface mb-1">{currentUser.name}</h2>
+        <div className="flex items-center gap-1.5 bg-secondary-container rounded-full px-3 py-1">
+          <Star size={12} className="text-secondary fill-secondary" />
+          <span className="font-label text-sm font-bold text-on-surface">{currentUser.ehrenpunkte.toLocaleString()} Ehrenpunkte</span>
         </div>
       </div>
 
-      {/* Coupons */}
-      <div className="px-4 mt-5 mb-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-slate-800">🎁 Belohnungen</h2>
-          <button className="text-xs text-primary font-semibold">Alle</button>
+      {/* Rewards / Coupons */}
+      <div className="pb-4">
+        <div className="flex items-center justify-between px-5 mb-3">
+          <h3 className="font-headline font-bold text-on-surface text-base">Deine Belohnungen</h3>
+          <button className="font-label text-xs text-primary font-semibold">Alle ansehen</button>
         </div>
-        <div className="overflow-x-auto -mx-4 px-4" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex gap-3" style={{ width: 'max-content' }}>
-            {coupons.map((coupon) => (
-              <div key={coupon.id} className="w-52">
-                <CouponCard
-                  coupon={coupon}
-                  onRedeem={() => handleRedeem(coupon.id, coupon.name)}
-                />
-              </div>
-            ))}
+        <div className="overflow-x-auto pl-5 pr-2" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-3" style={{ width: 'max-content', paddingRight: 20 }}>
+            {coupons.map((coupon) => {
+              const userPoints = currentUser.ehrenpunkte
+              const progress = Math.min((userPoints / coupon.pointsRequired) * 100, 100)
+              const canRedeem = userPoints >= coupon.pointsRequired && !redeemed.includes(coupon.id)
+              const imgSrc = couponImages[coupon.id]
+
+              return (
+                <div key={coupon.id} className="w-48 bg-surface-container-lowest rounded-lg overflow-hidden shrink-0 card-ambient">
+                  <div className="h-20 overflow-hidden relative">
+                    {imgSrc && <img src={imgSrc} alt="" className="w-full h-full object-cover" />}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <span className="absolute top-2 left-2.5 bg-surface-container-lowest/80 text-on-surface text-[9px] font-label font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                      {coupon.category}
+                    </span>
+                  </div>
+                  <div className="p-3.5">
+                    <p className="font-headline text-sm font-bold text-on-surface mb-1">{coupon.name}</p>
+                    <p className="font-body text-xs text-on-surface-variant mb-2">{coupon.description}</p>
+                    <div className="mb-1.5">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-body text-[10px] text-on-surface-variant">Fortschritt</span>
+                        <span className="font-label text-[10px] font-bold text-on-surface-variant">
+                          {Math.min(userPoints, coupon.pointsRequired)} / {coupon.pointsRequired} Pkt.
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-surface-container rounded-full">
+                        <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+                      </div>
+                    </div>
+                    {canRedeem && (
+                      <button
+                        onClick={() => handleRedeem(coupon.id, coupon.name)}
+                        className="mt-2 w-full py-2 bg-primary text-on-primary text-xs font-label font-bold rounded-full"
+                      >
+                        Jetzt einlösen
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 
-        {/* Suggestion */}
+        {/* Suggested Ehrensache */}
         {nextCoupon && suggestedEhrensache && (
-          <div className="mt-3 bg-primary-light rounded-2xl p-3.5 flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl shrink-0" style={{ background: suggestedEhrensache.gradient }} />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-primary font-bold">💡 Für {nextCoupon.name}</p>
-              <p className="text-xs text-slate-700 mt-0.5">
-                Mach <span className="font-semibold">"{suggestedEhrensache.name}"</span> — bringt dir{' '}
-                <span className="font-bold text-primary">{suggestedEhrensache.points} EP</span>
-              </p>
-            </div>
+          <div className="mx-5 mt-3 rounded-md overflow-hidden bg-primary/5 flex items-center p-3 gap-3">
+            <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+            <p className="font-body text-xs text-on-surface flex-1">
+              Do this Ehrensache to reach your goal:{' '}
+              <span className="font-semibold">{suggestedEhrensache.name}</span>
+            </p>
           </div>
         )}
       </div>
 
-      {/* Personal data */}
-      <div className="px-4 space-y-2">
-        <h2 className="text-sm font-bold text-slate-800 mb-3">👤 Mein Profil</h2>
+      {/* Profile sections */}
+      <div className="px-5 pb-8 space-y-2">
+        <h3 className="font-headline font-bold text-on-surface text-base mb-3">Mein Profil</h3>
 
         <ProfileSection
-          id="skills"
           title="Skills"
-          icon={<Award size={16} className="text-primary" />}
+          icon={<Award size={14} className="text-on-surface-variant" />}
           expanded={expanded === 'skills'}
           onToggle={() => setExpanded(expanded === 'skills' ? null : 'skills')}
         >
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {currentUser.skills.map((s) => (
-              <span key={s} className="bg-primary-light text-primary text-xs font-semibold px-3 py-1.5 rounded-full">
+              <span key={s} className="bg-surface-container text-on-surface-variant text-xs font-body font-medium px-3 py-1.5 rounded-full">
                 {s}
               </span>
             ))}
@@ -160,57 +152,41 @@ export default function ProfilePage() {
         </ProfileSection>
 
         <ProfileSection
-          id="experience"
-          title="Erfahrung"
-          icon={<Briefcase size={16} className="text-secondary" />}
-          expanded={expanded === 'experience'}
-          onToggle={() => setExpanded(expanded === 'experience' ? null : 'experience')}
-        >
-          <ul className="pt-2 space-y-1.5">
-            {currentUser.experience.map((e) => (
-              <li key={e} className="flex items-center gap-2 text-sm text-slate-700">
-                <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                {e}
-              </li>
-            ))}
-          </ul>
-        </ProfileSection>
-
-        <ProfileSection
-          id="certs"
-          title="Zertifikate"
-          icon={<GraduationCap size={16} className="text-amber-600" />}
+          title="Certificates"
+          icon={<GraduationCap size={14} className="text-on-surface-variant" />}
           expanded={expanded === 'certs'}
           onToggle={() => setExpanded(expanded === 'certs' ? null : 'certs')}
         >
-          <ul className="pt-2 space-y-1.5">
+          <ul className="pt-2 space-y-2">
             {currentUser.certificates.map((c) => (
-              <li key={c} className="flex items-center gap-2 text-sm text-slate-700">
-                <span className="text-amber-500 text-base">🏅</span>
-                {c}
+              <li key={c} className="flex items-center gap-2 font-body text-sm text-on-surface">
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" /> {c}
               </li>
             ))}
           </ul>
         </ProfileSection>
 
-        <div className="bg-white rounded-2xl shadow-card p-4 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-slate-700">Alter</p>
-            <p className="text-xs text-slate-400">{currentUser.age} Jahre</p>
+        <div className="bg-surface-container-lowest rounded-md px-4 py-4 flex items-center gap-3 card-ambient">
+          <div className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center">
+            <Briefcase size={16} className="text-on-surface-variant" />
           </div>
+          <div className="flex-1">
+            <p className="font-headline text-sm font-semibold text-on-surface">My Experience</p>
+            <p className="font-body text-xs text-on-surface-variant">{completedCount} Projekte abgeschlossen</p>
+          </div>
+          <ChevronRight size={16} className="text-outline" />
         </div>
       </div>
 
-      {/* Redeem toast */}
       <AnimatePresence>
         {redeemToast && (
           <motion.div
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
-            className="absolute bottom-20 left-4 right-4 z-50 bg-secondary text-white px-4 py-3 rounded-2xl shadow-card-lg text-sm font-semibold text-center"
+            className="absolute bottom-20 left-5 right-5 z-50 bg-inverse-surface text-inverse-on-surface px-5 py-3.5 rounded-lg font-label text-sm font-semibold text-center"
           >
-            ✅ "{redeemToast}" eingelöst!
+            "{redeemToast}" eingelöst
           </motion.div>
         )}
       </AnimatePresence>
@@ -221,7 +197,6 @@ export default function ProfilePage() {
 function ProfileSection({
   title, icon, expanded, onToggle, children,
 }: {
-  id?: string
   title: string
   icon: React.ReactNode
   expanded: boolean
@@ -229,19 +204,11 @@ function ProfileSection({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center gap-3 px-4 py-3.5"
-      >
-        <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-          {icon}
-        </div>
-        <span className="flex-1 text-left font-semibold text-slate-800 text-sm">{title}</span>
-        <ChevronRight
-          size={16}
-          className={`text-slate-400 transition-transform ${expanded ? 'rotate-90' : ''}`}
-        />
+    <div className="bg-surface-container-lowest rounded-md overflow-hidden card-ambient">
+      <button onClick={onToggle} className="w-full flex items-center gap-3 px-4 py-4">
+        <span className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center shrink-0">{icon}</span>
+        <span className="flex-1 text-left font-headline text-sm font-semibold text-on-surface">{title}</span>
+        <ChevronRight size={15} className={`text-outline transition-transform ${expanded ? 'rotate-90' : ''}`} />
       </button>
       <AnimatePresence>
         {expanded && (

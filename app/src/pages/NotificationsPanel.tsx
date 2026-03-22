@@ -21,16 +21,16 @@ export default function NotificationsPanel({ onClose }: NotificationsPanelProps)
         animate={{ y: 0 }}
         exit={{ y: '-100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-        className="absolute top-0 left-0 right-0 bg-white rounded-b-3xl shadow-card-lg max-h-[75%] overflow-hidden flex flex-col"
+        className="absolute top-0 left-0 right-0 bg-surface-container-lowest rounded-b-[2rem] max-h-[75%] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+        <div className="flex items-center justify-between px-5 py-4">
           <div>
-            <h2 className="font-bold text-slate-800">Benachrichtigungen</h2>
-            <p className="text-xs text-slate-400">{notifications.filter((n) => !n.read).length} ungelesen</p>
+            <h2 className="font-headline font-bold text-on-surface">Benachrichtigungen</h2>
+            <p className="font-body text-xs text-on-surface-variant">{notifications.filter((n) => !n.read).length} ungelesen</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-            <X size={16} className="text-slate-600" />
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+            <X size={16} className="text-on-surface" />
           </button>
         </div>
         <div className="overflow-y-auto flex-1">

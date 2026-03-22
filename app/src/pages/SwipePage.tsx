@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BellDot, X, Handshake, MessageCircle, RotateCcw } from 'lucide-react'
+import { RotateCcw, BellDot, Handshake } from 'lucide-react'
 import { ehrensachen } from '../data/ehrensachen'
 import type { Ehrensache } from '../types'
 import SwipeCardLarge from '../components/SwipeCardLarge'
@@ -43,43 +43,36 @@ export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
     setBookmarks((prev) => prev.includes(id) ? prev.filter((b) => b !== id) : [...prev, id])
   }
 
-  const triggerSwipe = (direction: 'left' | 'right') => {
-    if (cards.length === 0) return
-    swipe(direction, cards[0].id)
-  }
-
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 shrink-0">
-        <div>
-          <h1 className="text-xl font-black text-slate-800">Ehrensache</h1>
-          <p className="text-xs text-slate-400 font-medium">{cards.length} Aktionen verfügbar</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={undoLast} disabled={gone.length === 0} className="w-9 h-9 rounded-full bg-white shadow-card flex items-center justify-center disabled:opacity-30">
-            <RotateCcw size={16} className="text-slate-600" />
-          </button>
-          <button onClick={onNotifOpen} className="relative w-9 h-9 rounded-full bg-white shadow-card flex items-center justify-center">
-            <BellDot size={18} className="text-slate-700" />
-            {notifCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center font-bold">
-                {notifCount}
-              </span>
-            )}
-          </button>
-        </div>
+    <div className="flex flex-col h-full bg-surface">
+      {/* Minimal header with utility buttons */}
+      <div className="flex items-center justify-end px-5 pt-5 pb-2 shrink-0 gap-2">
+        <button
+          onClick={undoLast}
+          disabled={gone.length === 0}
+          className="w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center disabled:opacity-25 transition-opacity"
+        >
+          <RotateCcw size={15} className="text-on-surface-variant" />
+        </button>
+        <button
+          onClick={onNotifOpen}
+          className="relative w-9 h-9 rounded-full bg-surface-container-lowest flex items-center justify-center"
+        >
+          <BellDot size={17} className="text-on-surface-variant" />
+          {notifCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-error rounded-full border-2 border-surface" />
+          )}
+        </button>
       </div>
 
-      {/* Card Stack */}
-      <div className="flex-1 relative mx-1 mb-3">
+      {/* Card Stack - takes all remaining space */}
+      <div className="flex-1 relative mx-1 mb-2">
         {cards.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-8">
-            <div className="text-5xl">🎉</div>
-            <h3 className="text-lg font-bold text-slate-700">Alles gesehen!</h3>
-            <p className="text-sm text-slate-500">Du hast alle aktuellen Ehrensachen durchgeschaut. Schau morgen wieder vorbei!</p>
-            <button onClick={undoLast} className="mt-2 px-6 py-3 bg-primary text-white rounded-2xl font-semibold text-sm shadow-md">
-              Zurück zur letzten Karte
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-10">
+            <h3 className="font-headline text-base font-bold text-on-surface">Alles gesehen</h3>
+            <p className="font-body text-sm text-on-surface-variant leading-relaxed">Du hast alle aktuellen Ehrensachen gesehen. Schau morgen wieder vorbei.</p>
+            <button onClick={undoLast} className="mt-2 px-6 py-2.5 bg-primary text-on-primary rounded-full font-label font-bold text-sm">
+              Letzte Karte zurück
             </button>
           </div>
         ) : (
@@ -97,46 +90,21 @@ export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
         )}
       </div>
 
-      {/* Action Buttons */}
-      {cards.length > 0 && (
-        <div className="flex items-center justify-center gap-5 pb-4 px-4 shrink-0">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => triggerSwipe('left')}
-            className="w-14 h-14 rounded-full bg-white shadow-card-lg border border-slate-100 flex items-center justify-center"
-          >
-            <X size={24} className="text-red-400" strokeWidth={2.5} />
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => swipe('chat', cards[0]?.id)}
-            className="w-12 h-12 rounded-full bg-white shadow-card border border-slate-100 flex items-center justify-center"
-          >
-            <MessageCircle size={20} className="text-slate-500" />
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => triggerSwipe('right')}
-            className="w-14 h-14 rounded-full bg-primary shadow-card-lg flex items-center justify-center"
-          >
-            <Handshake size={24} className="text-white" strokeWidth={2} />
-          </motion.button>
-        </div>
-      )}
-
       {/* Match toast */}
       <AnimatePresence>
         {showMatch && (
           <motion.div
-            initial={{ y: -80, opacity: 0 }}
+            initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -80, opacity: 0 }}
-            className="absolute top-16 left-4 right-4 z-50 bg-secondary text-white px-5 py-4 rounded-2xl shadow-card-lg flex items-center gap-3"
+            exit={{ y: -60, opacity: 0 }}
+            className="absolute top-16 left-5 right-5 z-50 bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg flex items-center gap-3"
           >
-            <div className="text-2xl">🤝</div>
+            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center shrink-0">
+              <Handshake size={16} className="text-on-secondary" />
+            </div>
             <div>
-              <p className="font-bold text-sm">Match!</p>
-              <p className="text-xs text-green-100">{showMatch}</p>
+              <p className="font-headline font-bold text-sm">Matched!</p>
+              <p className="font-body text-xs text-inverse-on-surface/70 truncate">{showMatch}</p>
             </div>
           </motion.div>
         )}

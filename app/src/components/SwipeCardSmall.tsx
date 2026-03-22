@@ -1,50 +1,38 @@
-import { Calendar, MapPin, Zap } from 'lucide-react'
+import { Clock, MapPin } from 'lucide-react'
 import type { Ehrensache } from '../types'
-import { FriendAvatarGroup } from './FriendAvatar'
 
 interface SwipeCardSmallProps {
   ehrensache: Ehrensache
-  onClick: () => void
+  onClick?: () => void
 }
 
 function formatDate(dateStr: string) {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('de-DE', { day: '2-digit', month: 'short' })
+  return new Date(dateStr).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' })
 }
 
 export default function SwipeCardSmall({ ehrensache, onClick }: SwipeCardSmallProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full bg-white rounded-2xl shadow-card border border-slate-100 p-3.5 flex items-center gap-3 text-left active:scale-98 transition-transform"
+      className="w-full bg-surface-container-lowest rounded-lg p-3 flex items-center gap-3 text-left active:bg-surface-container-low transition-colors"
     >
-      <div
-        className="w-16 h-16 rounded-xl shrink-0"
-        style={{ background: ehrensache.gradient }}
-      />
+      <div className="w-14 h-14 rounded-md shrink-0 overflow-hidden">
+        <img src={ehrensache.image} alt="" className="w-full h-full object-cover" />
+      </div>
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-slate-800 text-sm leading-tight truncate">{ehrensache.name}</p>
-        <p className="text-xs text-slate-500 mt-0.5 truncate">{ehrensache.organization}</p>
-        <div className="flex items-center gap-3 mt-1.5">
-          <span className="flex items-center gap-1 text-xs text-slate-500">
-            <Calendar size={11} />
+        <p className="font-headline font-semibold text-on-surface text-sm leading-snug truncate">{ehrensache.name}</p>
+        <div className="flex items-center gap-3 mt-1">
+          <span className="flex items-center gap-1 text-xs text-on-surface-variant font-body">
+            <Clock size={10} className="text-outline" />
             {formatDate(ehrensache.date)}
           </span>
-          <span className="flex items-center gap-1 text-xs text-slate-500">
-            <MapPin size={11} />
+          <span className="flex items-center gap-1 text-xs text-on-surface-variant font-body">
+            <MapPin size={10} className="text-outline" />
             {ehrensache.district}
-          </span>
-          <span className="flex items-center gap-1 text-xs font-semibold text-amber-600">
-            <Zap size={11} className="fill-amber-500 text-amber-500" />
-            {ehrensache.points}
           </span>
         </div>
       </div>
-      {ehrensache.friendIds.length > 0 && (
-        <div className="shrink-0">
-          <FriendAvatarGroup friendIds={ehrensache.friendIds} max={2} />
-        </div>
-      )}
+      <span className="text-sm font-headline font-bold text-primary shrink-0">+{ehrensache.points}</span>
     </button>
   )
 }

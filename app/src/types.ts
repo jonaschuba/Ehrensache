@@ -12,6 +12,7 @@ export interface Ehrensache {
   skills: string[]
   points: number
   gradient: string
+  image: string
   urgency: 'hoch' | 'mittel' | 'niedrig'
   durationHours: number
   friendIds: string[]
@@ -27,8 +28,6 @@ export interface Friend {
   name: string
   initials: string
   color: string
-  level: number
-  levelName: string
   ehrenpunkte: number
   rankingpunkte: number
   recentEhrensacheId?: string
@@ -39,11 +38,8 @@ export interface User {
   name: string
   initials: string
   age: number
-  level: number
-  levelName: string
   ehrenpunkte: number
   rankingpunkte: number
-  nextLevelPoints: number
   skills: string[]
   experience: string[]
   certificates: string[]

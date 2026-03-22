@@ -1,4 +1,4 @@
-import { Trophy, Star, Handshake, MessageCircle, User } from 'lucide-react'
+import { Trophy, Handshake, MessageCircle, User, Layers } from 'lucide-react'
 import type { Tab } from '../types'
 
 interface BottomNavProps {
@@ -9,10 +9,10 @@ interface BottomNavProps {
 
 const tabs: { id: Tab; label: string; Icon: React.ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
   { id: 'ranking', label: 'Ranking', Icon: Trophy },
-  { id: 'ehrensachen', label: 'Meine', Icon: Star },
-  { id: 'swipe', label: 'Entdecken', Icon: Handshake },
+  { id: 'ehrensachen', label: 'Ehrensachen', Icon: Handshake },
+  { id: 'swipe', label: 'Home', Icon: Layers },
   { id: 'chat', label: 'Chat', Icon: MessageCircle },
-  { id: 'profile', label: 'Profil', Icon: User },
+  { id: 'profile', label: 'Profile', Icon: User },
 ]
 
 export default function BottomNav({ active, onChange, chatUnread }: BottomNavProps) {
