@@ -122,7 +122,7 @@ export default function SwipeCardLarge({
           style={{ scrollbarWidth: 'none' }}
         >
           {/* Push content to bottom - more space for image */}
-          <div className="h-[58%] shrink-0" />
+          <div className="h-[64%] shrink-0" />
 
           <div className="px-5 pb-5">
             {/* Title */}
