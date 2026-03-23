@@ -31,7 +31,7 @@ const friendActivity = friends
 export default function RankingPage() {
   return (
     <div className="flex flex-col h-full overflow-y-auto bg-surface" style={{ scrollbarWidth: 'none' }}>
-      <PageHeader title="Ranking" />
+      <PageHeader title={`Ranking ${currentUser.city}`} />
 
       {/* Stats cards */}
       <div className="px-5 pb-5">
@@ -42,7 +42,7 @@ export default function RankingPage() {
               <p className="font-headline text-3xl font-extrabold text-on-surface">{currentUser.rankingpunkte.toLocaleString()}</p>
               <TrendingUp size={16} className="text-primary" />
             </div>
-            <p className="font-body text-[11px] text-on-surface-variant mt-1">Gesamtpunktzahl für deinen globalen Rang</p>
+            <p className="font-body text-[11px] text-on-surface-variant mt-1">Dein Rang in {currentUser.city}</p>
           </div>
           <div className="bg-surface-container-lowest rounded-lg p-4 card-ambient">
             <p className="stat-label mb-1">Ehrenpunkte</p>
@@ -86,7 +86,7 @@ export default function RankingPage() {
 
       {/* Top Performer */}
       <div className="px-5 pb-8">
-        <SectionHeader title="Bestenliste" className="mb-3" />
+        <SectionHeader title={`Bestenliste ${currentUser.city}`} className="mb-3" />
         <div className="bg-surface-container-lowest rounded-lg overflow-hidden card-ambient">
           {sorted.slice(0, 3).map((person, i) => (
             <div

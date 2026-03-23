@@ -38,6 +38,7 @@ export interface User {
   name: string
   initials: string
   age: number
+  city: string
   ehrenpunkte: number
   rankingpunkte: number
   skills: string[]

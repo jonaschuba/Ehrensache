@@ -5,6 +5,7 @@ export const currentUser: User = {
   name: 'Anna Kollmer',
   initials: 'AK',
   age: 27,
+  city: 'München',
   ehrenpunkte: 840,
   rankingpunkte: 2450,
   skills: ['Coding', 'Design', 'Teamarbeit', 'Deutsch', 'Englisch', 'Erste Hilfe'],
