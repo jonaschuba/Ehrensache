@@ -33,7 +33,7 @@ export default function App() {
   const pages: Record<Tab, React.ReactNode> = {
     ranking: <RankingPage />,
     ehrensachen: <EhrensachenPage />,
-    swipe: <SwipePage notifCount={unreadNotifs} onNotifOpen={() => setShowNotifs(true)} />,
+    swipe: <SwipePage notifCount={unreadNotifs} onNotifOpen={() => setShowNotifs(true)} onChatOpen={() => handleTabChange('chat')} />,
     chat: <ChatPage />,
     profile: <ProfilePage />,
   }

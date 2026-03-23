@@ -12,7 +12,7 @@ const tabs: { id: Tab; label: string; Icon: React.ComponentType<{ size?: number;
   { id: 'ehrensachen', label: 'Ehrensachen', Icon: Handshake },
   { id: 'swipe', label: 'Home', Icon: Layers },
   { id: 'chat', label: 'Chat', Icon: MessageCircle },
-  { id: 'profile', label: 'Profile', Icon: User },
+  { id: 'profile', label: 'Profil', Icon: User },
 ]
 
 export default function BottomNav({ active, onChange, chatUnread }: BottomNavProps) {

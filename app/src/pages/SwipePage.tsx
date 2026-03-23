@@ -14,7 +14,7 @@ interface SwipePageProps {
 
 const initialCards = ehrensachen.filter((e) => e.status === 'swipe')
 
-export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
+export default function SwipePage({ notifCount, onNotifOpen, onChatOpen }: SwipePageProps) {
   const [cards, setCards] = useState<Ehrensache[]>(initialCards)
   const [bookmarks, setBookmarks] = useState<string[]>([])
   const [showMatch, setShowMatch] = useState<string | null>(null)
@@ -24,6 +24,11 @@ export default function SwipePage({ notifCount, onNotifOpen }: SwipePageProps) {
   const swipe = (direction: 'left' | 'right' | 'chat', id: string) => {
     const card = cards.find((c) => c.id === id)
     if (!card) return
+
+    if (direction === 'chat') {
+      onChatOpen?.(id)
+      return
+    }
 
     if (direction === 'right') setShowMatch(card.name)
     setGone((prev) => [card, ...prev])

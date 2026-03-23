@@ -54,7 +54,7 @@ export default function ProfilePage() {
         <div className="relative mb-3">
           <div className="w-20 h-20 rounded-full overflow-hidden ring-4 ring-surface-container">
             <img
-              src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&q=80"
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=80"
               alt=""
               className="w-full h-full object-cover"
             />
@@ -122,7 +122,7 @@ export default function ProfilePage() {
           <div className="mx-5 mt-3 rounded-md overflow-hidden bg-primary/5 flex items-center p-3 gap-3">
             <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
             <p className="font-body text-xs text-on-surface flex-1">
-              Do this Ehrensache to reach your goal:{' '}
+              Mach diese Ehrensache, um dein Ziel zu erreichen:{' '}
               <span className="font-semibold">{suggestedEhrensache.name}</span>
             </p>
           </div>
@@ -134,7 +134,7 @@ export default function ProfilePage() {
         <SectionHeader title="Mein Profil" className="mb-3" />
 
         <ProfileSection
-          title="Skills"
+          title="Fähigkeiten"
           icon={<Award size={14} className="text-on-surface-variant" />}
           expanded={expanded === 'skills'}
           onToggle={() => setExpanded(expanded === 'skills' ? null : 'skills')}
@@ -149,7 +149,7 @@ export default function ProfilePage() {
         </ProfileSection>
 
         <ProfileSection
-          title="Certificates"
+          title="Zertifikate"
           icon={<GraduationCap size={14} className="text-on-surface-variant" />}
           expanded={expanded === 'certs'}
           onToggle={() => setExpanded(expanded === 'certs' ? null : 'certs')}
@@ -168,7 +168,7 @@ export default function ProfilePage() {
             <Briefcase size={16} className="text-on-surface-variant" />
           </div>
           <div className="flex-1">
-            <p className="font-headline text-sm font-semibold text-on-surface">My Experience</p>
+            <p className="font-headline text-sm font-semibold text-on-surface">Meine Erfahrung</p>
             <p className="font-body text-xs text-on-surface-variant">{completedCount} Projekte abgeschlossen</p>
           </div>
           <ChevronRight size={16} className="text-outline" />

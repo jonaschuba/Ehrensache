@@ -12,7 +12,7 @@ export const ehrensachen: Ehrensache[] = [
     district: 'Maxvorstadt',
     shortDescription: 'Hilf uns, Lebensmittelspenden zu sortieren und für die Ausgabe vorzubereiten.',
     fullDescription:
-      'Die Münchner Tafel versorgt täglich hunderte bedürftige Menschen mit Lebensmitteln. Als freiwilliger Helfer sortierst du angelieferte Waren, prüfst das Mindesthaltbarkeitsdatum und bereitest die Pakete für die Ausgabe vor. Keine Vorkenntnisse nötig – nur Lust auf Teamwork und gute Laune.',
+      'Die Münchner Tafel versorgt täglich hunderte bedürftige Menschen mit Lebensmitteln. Als freiwillige:r Helfer:in sortierst du angelieferte Waren, prüfst das Mindesthaltbarkeitsdatum und bereitest die Pakete für die Ausgabe vor. Keine Vorkenntnisse nötig – nur Lust auf Teamwork und gute Laune.',
     skills: ['Keine Vorerfahrung nötig', 'Teamfähigkeit'],
     points: 120,
     gradient: 'linear-gradient(145deg, #1e3a5f 0%, #2563eb 60%, #0ea5e9 100%)',
@@ -49,7 +49,7 @@ export const ehrensachen: Ehrensache[] = [
   },
   {
     id: 'e3',
-    name: 'Street Soccer Cup – Schiedsrichter gesucht',
+    name: 'Street Soccer Cup – Schiedsrichter:in gesucht',
     organization: 'Buntkicktgut gGmbH',
     organizationId: 'org3',
     date: '2026-04-05T11:00:00',
@@ -58,7 +58,7 @@ export const ehrensachen: Ehrensache[] = [
     district: 'Pasing',
     shortDescription: 'Leite Spiele beim Street Soccer Turnier für Jugendliche aus sozialen Brennpunkten.',
     fullDescription:
-      'Buntkicktgut integriert Jugendliche aus schwierigen Verhältnissen durch Fußball. Beim Street Soccer Cup brauchst du als Schiedsrichter faire Spielleitung und einen kühlen Kopf. Als Dankeschön gibt es ein Helfer-Shirt und Verpflegung.',
+      'Buntkicktgut integriert Jugendliche aus schwierigen Verhältnissen durch Fußball. Beim Street Soccer Cup brauchst du als Schiedsrichter:in faire Spielleitung und einen kühlen Kopf. Als Dankeschön gibt es ein Helfer:innen-Shirt und Verpflegung.',
     skills: ['Fußball-Kenntnisse', 'Kommunikation'],
     points: 150,
     gradient: 'linear-gradient(145deg, #7c2d12 0%, #ea580c 60%, #fb923c 100%)',
@@ -154,7 +154,7 @@ export const ehrensachen: Ehrensache[] = [
     skills: ['Belastbarkeit', 'Einfühlungsvermögen'],
     points: 180,
     gradient: 'linear-gradient(145deg, #1e1b4b 0%, #4338ca 60%, #818cf8 100%)',
-    image: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=1000&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=1000&fit=crop&q=80',
     urgency: 'hoch',
     durationHours: 6,
     friendIds: ['f3', 'f5'],

@@ -2,8 +2,8 @@ import type { User } from '../types'
 
 export const currentUser: User = {
   id: 'user',
-  name: 'Lukas Wagner',
-  initials: 'LW',
+  name: 'Anna Kollmer',
+  initials: 'AK',
   age: 27,
   ehrenpunkte: 840,
   rankingpunkte: 2450,

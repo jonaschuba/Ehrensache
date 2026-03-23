@@ -57,7 +57,7 @@ export default function RankingPage() {
 
       {/* Friends in Action */}
       <div className="px-5 pb-4">
-        <SectionHeader title="Friends in Action" action="Alle ansehen" className="mb-3" />
+        <SectionHeader title="Freunde in Aktion" action="Alle ansehen" className="mb-3" />
         <HorizontalScroll>
             {friendActivity.map(({ friend, ehrensache }) =>
               ehrensache ? (
@@ -66,7 +66,7 @@ export default function RankingPage() {
                     <img src={ehrensache.image} alt="" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                     <span className="absolute top-2.5 left-2.5 badge-label bg-secondary-container text-on-surface">
-                      Umwelt
+                      {ehrensache.district}
                     </span>
                   </div>
                   <div className="p-3.5">
@@ -75,7 +75,7 @@ export default function RankingPage() {
                       {friend.name} war hier
                     </p>
                     <button className="flex items-center gap-1.5 bg-secondary-container text-on-surface rounded-full px-3 py-1.5 text-xs font-label font-bold">
-                      <ThumbsUp size={12} /> High-five
+                      <ThumbsUp size={12} /> Daumen hoch
                     </button>
                   </div>
                 </div>
@@ -86,7 +86,7 @@ export default function RankingPage() {
 
       {/* Top Performer */}
       <div className="px-5 pb-8">
-        <SectionHeader title="Top Performer" className="mb-3" />
+        <SectionHeader title="Bestenliste" className="mb-3" />
         <div className="bg-surface-container-lowest rounded-lg overflow-hidden card-ambient">
           {sorted.slice(0, 3).map((person, i) => (
             <div

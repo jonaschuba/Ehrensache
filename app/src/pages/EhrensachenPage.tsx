@@ -26,8 +26,8 @@ export default function EhrensachenPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('current')
 
   const tabs: { key: TabKey; label: string }[] = [
-    { key: 'current', label: 'Active' },
-    { key: 'completed', label: 'Completed' },
+    { key: 'current', label: 'Aktuell' },
+    { key: 'completed', label: 'Abgeschlossen' },
   ]
 
   return (
@@ -53,7 +53,7 @@ export default function EhrensachenPage() {
                   {/* Section label */}
                   {isActive && index === 0 && (
                     <span className="badge-label bg-secondary-container text-on-surface">
-                      Today's Mission
+                      Heutige Mission
                     </span>
                   )}
                   {!isActive && index === activeEhrensachen.length && (
@@ -110,13 +110,13 @@ export default function EhrensachenPage() {
             {/* Monthly impact celebration */}
             <div className="bg-gradient-to-br from-primary to-primary-container rounded-lg p-5 text-on-primary">
               <span className="badge-label bg-on-primary/20 text-on-primary mb-3">
-                Monthly Rewards
+                Monatsbelohnung
               </span>
-              <h3 className="font-headline font-extrabold text-xl mb-1">You did it!</h3>
-              <p className="font-body text-sm text-on-primary/80 mb-2">12h of real impact this month.</p>
+              <h3 className="font-headline font-extrabold text-xl mb-1">Geschafft!</h3>
+              <p className="font-body text-sm text-on-primary/80 mb-2">12 Stunden echten Impact diesen Monat.</p>
               <p className="font-headline font-bold text-secondary-container text-lg mb-4">+500 Ehrenpunkte</p>
               <button className="w-full bg-on-primary/20 text-on-primary rounded-full py-2.5 font-label font-bold text-sm">
-                Share to Instagram Stories
+                In Instagram Story teilen
               </button>
             </div>
           </div>

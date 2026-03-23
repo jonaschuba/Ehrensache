@@ -21,7 +21,7 @@ export const notifications: AppNotification[] = [
     id: 'n3',
     type: 'new_event',
     title: 'Neue Ehrensache von Caritas',
-    body: 'Caritas München hat eine neue Ehrensache veröffentlicht: "Mahlzeit für Obdachlose – Helfer gesucht"',
+    body: 'Caritas München hat eine neue Ehrensache veröffentlicht: "Mahlzeit für Obdachlose – Helfer:innen gesucht"',
     timestamp: 'vor 5 Std.',
     read: false,
   },
