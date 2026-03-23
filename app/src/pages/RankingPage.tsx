@@ -121,9 +121,13 @@ export default function RankingPage() {
               <span className="w-7 text-center font-headline font-bold text-primary text-sm">
                 {userRank}
               </span>
-              <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs bg-primary">
-                {currentUser.initials}
-              </div>
+              {currentUser.avatar ? (
+                <img src={currentUser.avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
+              ) : (
+                <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs bg-primary">
+                  {currentUser.initials}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="font-headline text-sm font-semibold text-primary truncate">
                   Du ({currentUser.name.split(' ')[0]})

@@ -54,7 +54,7 @@ export default function ProfilePage() {
         <div className="relative mb-3">
           <div className="w-20 h-20 rounded-full overflow-hidden ring-4 ring-surface-container">
             <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=80"
+              src={currentUser.avatar}
               alt=""
               className="w-full h-full object-cover"
             />
